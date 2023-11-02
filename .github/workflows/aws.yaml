@@ -1,0 +1,16 @@
+on:
+  push:
+
+jobs:
+  get-caller-identity:
+    runs-on: ubuntu-latest
+    permissions: # required to interact with GitHub's OIDC Token endpoint.
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT }}:role/GitHubActionsRole
+          aws-region: us-east-1
+      - run: aws sts get-caller-identity
